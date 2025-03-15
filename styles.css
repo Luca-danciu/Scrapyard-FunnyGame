@@ -1,0 +1,171 @@
+/* General styles */
+.css-class {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  background-color: black; /* Black background behind the video */
+}
+
+.background-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -1;
+}
+
+.container {
+  position: relative;
+  z-index: 1;
+  padding: 20px;
+  color: white;
+}
+
+/* Glitch effect */
+.glitch {
+  font-family: "Roboto", sans-serif;
+  font-size: 4em; /* Make title bigger */
+  position: relative;
+  display: inline-block;
+  color: white;
+}
+
+.glitch::before,
+.glitch::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #18b3da; /* Purple color for the glitch effect */
+  z-index: -1;
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
+  opacity: 0.7;
+  animation: glitch 1s infinite;
+}
+
+.glitch::after {
+  color: #22537b; /* Cyan color for the glitch effect */
+  animation: glitch 1s infinite reverse;
+}
+
+@keyframes glitch {
+  0% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0, 0);
+  }
+  20% {
+    clip-path: inset(0 0 0 20%);
+    transform: translate(-5px, -5px);
+  }
+  40% {
+    clip-path: inset(0 20% 0 0);
+    transform: translate(5px, 5px);
+  }
+  60% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(-5px, -5px);
+  }
+  80% {
+    clip-path: inset(0 20% 0 0);
+    transform: translate(5px, 5px);
+  }
+  100% {
+    clip-path: inset(0 0 0 0);
+    transform: translate(0, 0);
+  }
+}
+
+/* Glitch effect for timer */
+.glitch-timer {
+  position: relative;
+  display: inline-block;
+  font-size: 2em;
+  color: white;
+}
+
+.glitch-timer::before,
+.glitch-timer::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #18b3da; /* Purple color for the glitch effect */
+  z-index: -1;
+  overflow: hidden;
+  clip-path: inset(0 0 0 0);
+  opacity: 0.7;
+  animation: glitch 1s infinite;
+}
+
+.glitch-timer::after {
+  color: #22537b; /* Cyan color for the glitch effect */
+  animation: glitch 1s infinite reverse;
+}
+
+/* Units (D, H, M, S) */
+.unit {
+  font-weight: bold;
+  padding: 0 10px;
+}
+
+/* Countdown timer style */
+.countdown-timer {
+  font-size: 2.5em;
+  position: absolute; /* Position it at the bottom of the page */
+  bottom: -400px; /* Increase this value to move the timer lower */
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  font-family: "Roboto", sans-serif;
+}
+
+/* Mobile styles */
+@media (max-width: 600px) {
+  .background-video {
+    min-height: 100vh;
+    width: 100%;
+    object-fit: cover;
+  }
+  h1 {
+    font-size: 2em; /* Adjust font size for small screens */
+  }
+  .countdown-timer {
+    font-size: 1.5em; /* Adjust timer font size for small screens */
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .background-video {
+    min-height: 100vh;
+    width: 100%;
+    object-fit: cover;
+  }
+  h1 {
+    font-size: 3em; /* Adjust font size for tablet screens */
+  }
+  .countdown-timer {
+    font-size: 2em; /* Adjust timer font size for tablet screens */
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1025px) {
+  .background-video {
+    min-height: 100vh;
+    width: 100vw;
+    object-fit: cover;
+  }
+  h1 {
+    font-size: 4em; /* Large title font size for desktop */
+  }
+  .countdown-timer {
+    font-size: 2.5em; /* Adjust timer font size for desktop */
+  }
+}

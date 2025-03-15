@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Funny Dump HTML</title>
+    <style>
+      body {
+        font-family: Comic Sans MS, sans-serif;
+        background-color: #ffeb3b;
+        color: #222;
+        text-align: center;
+        padding: 20px;
+      }
+      header {
+        background-color: #ff5722;
+        color: white;
+        padding: 20px;
+        font-size: 2em;
+        border-radius: 10px;
+      }
+      .meme {
+        width: 60%;
+        margin: 20px auto;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+      .button {
+        background-color: #4caf50;
+        color: white;
+        padding: 15px 32px;
+        font-size: 16px;
+        margin: 20px;
+        border: none;
+        cursor: pointer;
+        border-radius: 8px;
+      }
+      .button:hover {
+        background-color: #45a049;
+      }
+      footer {
+        background-color: #2196f3;
+        color: white;
+        padding: 10px;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        text-align: center;
+      }
+      .random-text {
+        font-size: 1.5em;
+        color: #d32f2f;
+        font-weight: bold;
+        margin-top: 30px;
+      }
+      .pop-up {
+        display: none;
+        padding: 15px;
+        background-color: #f44336;
+        color: white;
+        border-radius: 8px;
+        margin-top: 20px;
+        font-size: 1.2em;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Welcome to the Land of Absurdity</h1>
+      <p>Prepare yourself for the most ridiculous website you've ever seen!</p>
+    </header>
+
+    <img class="meme" src="IMG-20231001-WA0007.jpg" alt="Funny Meme" />
+
+    <button class="button" onclick="window.location.href='index.html';">
+      Click me to start a super fun game!
+    </button>
+    <div class="pop-up" id="popup">
+      <p>Surprise! 🎉 You just clicked a button... just like everyone else!</p>
+    </div>
+
+    <div class="random-text">
+      <p>
+        Random Fact: Did you know that sloths can hold their breath for up to 40
+        minutes?! 🦥
+      </p>
+    </div>
+
+    <footer>
+      <p>
+        &copy; 2025 Ridiculous Web Devs. All Rights Reserved (Except the memes,
+        they belong to the internet).
+      </p>
+    </footer>
+
+    <script>
+      function showPopUp() {
+        document.getElementById("popup").style.display = "block";
+      }
+
+      setTimeout(function () {
+        alert("Just wanted to remind you: You're awesome!");
+      }, 5000);
+    </script>
+  </body>
+</html>

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Infinite Video Player</title>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #000;
+        color: white;
+        font-family: Arial, sans-serif;
+      }
+      video {
+        max-width: 90%;
+        max-height: 80%;
+      }
+      .bottom-text {
+        margin-top: 20px;
+        font-size: 18px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <video id="videoPlayer" autoplay loop muted playsinline>
+      <source src="MouseSpiner.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+
+    <div class="bottom-text">YOU`RE SMARTER THAN ME</div>
+
+    <script>
+      class InfiniteVideoPlayer {
+        constructor(videoElement) {
+          this.video = videoElement;
+          this.init();
+        }
+
+        init() {
+          this.video.loop = true; // Ensures infinite loop
+          this.video.muted = true; // Ensures autoplay works without user interaction
+          this.video.play().catch((error) => {
+            console.error("Autoplay failed:", error);
+          });
+        }
+      }
+
+      // Get the video element and create an instance of the class
+      const videoElement = document.getElementById("videoPlayer");
+      new InfiniteVideoPlayer(videoElement);
+    </script>
+  </body>
+</html>
