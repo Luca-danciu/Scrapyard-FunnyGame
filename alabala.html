@@ -2,106 +2,222 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Funny Dump HTML</title>
+    <title>Sequential Password Game</title>
     <style>
       body {
-        font-family: Comic Sans MS, sans-serif;
-        background-color: #ffeb3b;
-        color: #222;
+        background: #222;
+        color: #eee;
+        font-family: Arial, sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        margin: 0;
+      }
+      .container {
         text-align: center;
+        max-width: 600px;
         padding: 20px;
+        border: 1px solid #444;
+        border-radius: 8px;
+        background: #333;
       }
-      header {
-        background-color: #ff5722;
-        color: white;
-        padding: 20px;
-        font-size: 2em;
-        border-radius: 10px;
-      }
-      .meme {
-        width: 60%;
+      #rulesContainer {
+        text-align: left;
         margin: 20px auto;
-        border-radius: 10px;
-        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        max-width: 400px;
+        line-height: 1.6em;
       }
-      .button {
-        background-color: #4caf50;
-        color: white;
-        padding: 15px 32px;
-        font-size: 16px;
-        margin: 20px;
-        border: none;
-        cursor: pointer;
-        border-radius: 8px;
+      .completed {
+        color: #4caf50;
       }
-      .button:hover {
-        background-color: #45a049;
-      }
-      footer {
-        background-color: #2196f3;
-        color: white;
-        padding: 10px;
-        position: fixed;
-        bottom: 0;
-        width: 100%;
-        text-align: center;
-      }
-      .random-text {
-        font-size: 1.5em;
-        color: #d32f2f;
+      .current {
         font-weight: bold;
-        margin-top: 30px;
+        color: #ff9800;
       }
-      .pop-up {
-        display: none;
-        padding: 15px;
-        background-color: #f44336;
-        color: white;
-        border-radius: 8px;
+      input[type="text"] {
+        padding: 10px;
+        font-size: 16px;
+        width: 80%;
+        max-width: 300px;
+        margin-bottom: 10px;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        background: #555;
+        color: #eee;
+        cursor: pointer;
+      }
+      button:disabled {
+        background: #777;
+        cursor: not-allowed;
+      }
+      .message {
         margin-top: 20px;
-        font-size: 1.2em;
+        font-size: 20px;
       }
     </style>
   </head>
   <body>
-    <header>
-      <h1>Welcome to the Land of Absurdity</h1>
-      <p>Prepare yourself for the most ridiculous website you've ever seen!</p>
-    </header>
-
-    <img class="meme" src="IMG-20231001-WA0007.jpg" alt="Funny Meme" />
-
-    <button class="button" onclick="window.location.href='index.html';">
-      Click me to start a super fun game!
-    </button>
-    <div class="pop-up" id="popup">
-      <p>Surprise! 🎉 You just clicked a button... just like everyone else!</p>
+    <div class="container">
+      <h1>Sequential Password Game</h1>
+      <div id="rulesContainer"></div>
+      <input
+        type="text"
+        id="password"
+        placeholder="Enter your password"
+        autocomplete="off"
+      />
+      <br />
+      <button id="submitBtn" disabled>Submit</button>
+      <div class="message" id="message"></div>
     </div>
-
-    <div class="random-text">
-      <p>
-        Random Fact: Did you know that sloths can hold their breath for up to 40
-        minutes?! 🦥
-      </p>
-    </div>
-
-    <footer>
-      <p>
-        &copy; 2025 Ridiculous Web Devs. All Rights Reserved (Except the memes,
-        they belong to the internet).
-      </p>
-    </footer>
 
     <script>
-      function showPopUp() {
-        document.getElementById("popup").style.display = "block";
+      // Define the 5 input-based rules.
+      const rules = [
+        {
+          text: "1. Use at least one uppercase letter.",
+          validate: (value) => /[A-Z]/.test(value),
+        },
+        {
+          text: "2. Use at least one special character: !, @, #, $, %, &, ), {, }, `, ~, <, >",
+          validate: (value) => /[!@#$%&\)\{\}` + "`" + `~<>]/.test(value),
+        },
+        {
+          text: "3. Type more than 10 letters (alphabetic characters).",
+          validate: (value) => {
+            const letterCount = (value.match(/[a-zA-Z]/g) || []).length;
+            return letterCount > 10;
+          },
+        },
+        {
+          text: '4. Contain the name "Luca", "Gabi" or "Cristina" (case-insensitive).',
+          validate: (value) => /(luca|gabi|cristina)/i.test(value),
+        },
+        {
+          text: "5. Contain at least one number.",
+          validate: (value) => /[0-9]/.test(value),
+        },
+      ];
+
+      // Rule 6 is time-based.
+      const rule6Text =
+        "6. Wait 5 seconds before you can press the submit button.";
+
+      const rulesContainer = document.getElementById("rulesContainer");
+      const passwordInput = document.getElementById("password");
+      const submitBtn = document.getElementById("submitBtn");
+      const messageDiv = document.getElementById("message");
+
+      // Variables to track progress
+      let currentUnlocked = 0; // number of rules (from 0 to 5) that are currently satisfied
+      let rule6Timer = null; // timer for rule 6
+      let rule6TimeLeft = 5; // seconds left for rule 6 countdown
+
+      // Update the rules display
+      function updateRulesDisplay() {
+        rulesContainer.innerHTML = "";
+        // Display all completed rules
+        for (let i = 0; i < currentUnlocked; i++) {
+          const p = document.createElement("p");
+          p.textContent = rules[i].text + " ✓";
+          p.classList.add("completed");
+          rulesContainer.appendChild(p);
+        }
+        // If not all 5 rules are unlocked, display the next rule as current.
+        if (currentUnlocked < rules.length) {
+          const p = document.createElement("p");
+          p.textContent = rules[currentUnlocked].text;
+          p.classList.add("current");
+          rulesContainer.appendChild(p);
+        } else {
+          // All 5 input rules are satisfied. Now show rule 6.
+          const p = document.createElement("p");
+          if (rule6Timer) {
+            p.textContent = rule6Text + " (" + rule6TimeLeft + "s remaining)";
+            p.classList.add("current");
+          } else {
+            p.textContent = rule6Text + " (Completed)";
+            p.classList.add("completed");
+          }
+          rulesContainer.appendChild(p);
+        }
       }
 
-      setTimeout(function () {
-        alert("Just wanted to remind you: You're awesome!");
-      }, 5000);
+      // Function to check progress for rules 1 to 5.
+      function checkRules() {
+        const value = passwordInput.value;
+        let unlocked = 0;
+        for (let i = 0; i < rules.length; i++) {
+          if (rules[i].validate(value)) {
+            unlocked++;
+          } else {
+            break; // only count consecutive rules from the first one
+          }
+        }
+        return unlocked;
+      }
+
+      // Clear rule6 timer if running.
+      function clearRule6Timer() {
+        if (rule6Timer) {
+          clearInterval(rule6Timer);
+          rule6Timer = null;
+          rule6TimeLeft = 5;
+          submitBtn.disabled = true;
+        }
+      }
+
+      // Listen for input changes.
+      passwordInput.addEventListener("input", function () {
+        // If the user changes input during the waiting period (rule 6), cancel the timer.
+        if (currentUnlocked === rules.length && rule6Timer) {
+          clearRule6Timer();
+        }
+        // Check how many rules are satisfied in order.
+        currentUnlocked = checkRules();
+        updateRulesDisplay();
+
+        // If all 5 input rules are satisfied and timer is not started, start rule 6 timer.
+        if (currentUnlocked === rules.length && !rule6Timer) {
+          submitBtn.disabled = true;
+          rule6TimeLeft = 5;
+          rule6Timer = setInterval(() => {
+            rule6TimeLeft--;
+            updateRulesDisplay();
+            if (rule6TimeLeft <= 0) {
+              clearInterval(rule6Timer);
+              rule6Timer = null;
+              submitBtn.disabled = false;
+              updateRulesDisplay();
+            }
+          }, 1000);
+        }
+      });
+
+      // On submit button click, perform final check and then redirect.
+      submitBtn.addEventListener("click", function () {
+        // Final check: all 5 input rules must still be satisfied.
+        if (checkRules() !== rules.length) {
+          messageDiv.textContent =
+            "Game Over: One of the earlier rules is no longer satisfied.";
+          submitBtn.disabled = true;
+          return;
+        }
+        // Rule 6 should be complete (submit enabled).
+        messageDiv.textContent = "Congratulations, you win!";
+        // After a short delay, redirect to another HTML page.
+        setTimeout(() => {
+          window.location.href = "Castig.html"; // Replace "next.html" with your desired page.
+        }, 1000);
+      });
+
+      // Initialize display.
+      updateRulesDisplay();
     </script>
   </body>
 </html>
